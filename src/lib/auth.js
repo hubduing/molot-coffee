@@ -21,6 +21,7 @@ export const RU = {
   T10: 'Слишком много попыток. Подождите минуту и попробуйте снова.',
   wait: 'Подождите…',
   okReg: 'Готово! Аккаунт создан',
+  okCheck: 'Аккаунт создан! Проверьте почту и перейдите по ссылке, затем войдите.',
   okLogin: 'С возвращением',
   okReset: 'Письмо для восстановления отправлено на',
   okPass: 'Новый пароль сохранён. Войдите с ним.',
@@ -47,19 +48,32 @@ async function hashPw(s) {
 }
 
 function sbErr(e) {
-  const m = String(e?.message || '').toLowerCase();
+  const m = String(e?.message || '');
+  const l = m.toLowerCase();
   if (/provider.*not.*enabl|unsupported provider|validation failed.*provider/i.test(m))
     return 'OAuth-провайдер Google выключен в Supabase Dashboard → Authentication → Providers.';
   if (/redirect.*url|redirect_uri/i.test(m))
     return 'Redirect URL не разрешён в Supabase Dashboard → Authentication → URL Configuration.';
-  if (/already registered|already exists|duplicate/i.test(m)) return 'T5';
+  if (/email not confirmed|email.*confirm|not confirmed/i.test(m))
+    return 'E-mail не подтверждён. Проверьте почту и перейдите по ссылке из письма, затем войдите.';
+  if (/already registered|already exists|duplicate|user already/i.test(m)) return 'T5';
+  if (/weak.*password|password.*weak|too short/i.test(m)) return 'T3';
+  if (/database error saving new user/i.test(m))
+    return 'Supabase не смог создать пользователя (триггер handle_new_user / таблица profiles). Проверьте SQL и RLS-политики.';
+  if (/invalid api key|api key.*invalid|apikey|jwt/i.test(m))
+    return 'Неверный Supabase anon key. Проверьте Secrets VITE_SUPABASE_ANON_KEY и пересоберите сайт.';
+  if (/failed to fetch|network|fetch failed|load failed/i.test(m))
+    return 'Нет связи с Supabase (сеть/CORS). Проверьте URL проекта и доступность.';
   if (/invalid login|invalid.*credential|wrong|incorrect|password/i.test(m)) return 'T9';
-  if (/not found|no user|not confirmed/i.test(m)) return 'T8';
+  if (/not found|no user/i.test(m)) return 'T8';
   if (/rate limit|too many|over.*limit/i.test(m)) return 'T10';
   if (/invalid.*email/i.test(m)) return 'T2';
   return 'T0';
 }
-const wrap = (fn) => (...a) => fn(...a).catch((e) => { throw new Error(t(String(e?.message || 'T0'))); });
+const wrap = (fn) => (...a) => fn(...a).catch((e) => {
+  if (e?.code === 'CHECK_EMAIL' || e?.message === 'CHECK_EMAIL') throw e;
+  throw new Error(t(String(e?.message || 'T0')));
+});
 
 const sb = SUPABASE_URL && SUPABASE_ANON_KEY ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 export const cloudEnabled = !!sb;
@@ -111,11 +125,29 @@ export const authApi = {
     if (pw.length < 6) throw new Error('T3');
     if (!d.agree) throw new Error('T4');
     if (sb) {
-      const r = await sb.auth.signUp({ email: ml, password: pw, options: { data: { name: nm, phone: ph } } });
-      if (r.error) throw new Error(sbErr(r.error));
+      let r;
+      try {
+        r = await sb.auth.signUp({ email: ml, password: pw, options: { data: { name: nm, phone: ph }, emailRedirectTo: location.origin + location.pathname } });
+      } catch (e) {
+        console.error('[molot] supabase signUp network:', e);
+        throw new Error(sbErr(e));
+      }
+      if (r.error) {
+        console.error('[molot] supabase signUp:', r.error);
+        throw new Error(sbErr(r.error));
+      }
       const u = r.data?.user;
+      const session = r.data?.session;
       if (!u) throw new Error('T0');
-      await sb.from('profiles').upsert({ id: u.id, email: ml, name: nm, phone: ph });
+      // Upsert профиля — не блокируем регистрацию, если RLS запретил (есть триггер handle_new_user).
+      const up = await sb.from('profiles').upsert({ id: u.id, email: ml, name: nm, phone: ph });
+      if (up.error) console.warn('[molot] profiles upsert:', up.error.message);
+      // Supabase может требовать подтверждение e-mail: сессии нет — просим проверить почту.
+      if (!session) {
+        const err = new Error('CHECK_EMAIL');
+        err.code = 'CHECK_EMAIL';
+        throw err;
+      }
       return { email: ml, name: nm, phone: ph, provider: 'supabase' };
     }
     const us = read(U, {});

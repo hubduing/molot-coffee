@@ -76,7 +76,15 @@ export function RegisterForm({ reg, setReg, busy, setBusy, setTab, onDone }) {
     setBusy(true);
     signUp({ name: reg.name, email: reg.email, pass: reg.pass, phone: reg.phone, agree: reg.agree })
       .then((u) => { setReg({ name: '', email: '', pass: '', phone: '', agree: false, show: false }); onDone(); showToast(`${RU.okReg}: ${u.name}`); })
-      .catch((err) => showToast(err.message, true))
+      .catch((err) => {
+        if (err?.code === 'CHECK_EMAIL' || err?.message === 'CHECK_EMAIL') {
+          setReg({ name: '', email: '', pass: '', phone: '', agree: false, show: false });
+          setTab('login'); showToast(RU.okCheck);
+          return;
+        }
+        console.error('[molot] register:', err);
+        showToast(err.message, true);
+      })
       .finally(() => setBusy(false));
   };
   return (
