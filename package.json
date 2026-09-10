@@ -1,0 +1,33 @@
+{
+  "name": "molot-coffee",
+  "version": "1.0.0",
+  "description": "Лендинг + личный кабинет спешалти-кофейни «МОЛОТ». Чистый HTML/CSS/JS без сборки: меню с табами, бронь столика, регистрация/вход через Supabase Auth с fallback в `localStorage`.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hubduing/molot-coffee.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/hubduing/molot-coffee/issues"
+  },
+  "homepage": "https://github.com/hubduing/molot-coffee#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.2.2"
+  }
+}
