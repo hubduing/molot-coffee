@@ -96,7 +96,7 @@
         info.append(b, ' — данные подставим автоматически.');
       }
     }
-    $$('[data-open-modal]').forEach((btn) => { btn.textContent = u ? `👤 ${u.name}` : 'Войти'; });
+    $$('[data-open-modal]').forEach((btn) => { btn.textContent = u ? '👤 Профиль' : 'Регистрация'; });
     if (u) {
       const bn = $('#bName'), bp = $('#bPhone');
       if (bn && !bn.value) bn.value = u.name ?? '';
@@ -129,7 +129,7 @@
       if (!ensureModalContent()) return showToast('Личный кабинет загружается…', true);
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
-      const next = pendingTab || (currentUser() ? 'cabinet' : 'login');
+      const next = pendingTab || (currentUser() ? 'cabinet' : 'register');
       pendingTab = null;
       setTab(next);
     };

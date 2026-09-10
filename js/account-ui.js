@@ -30,6 +30,7 @@
     }
     return s;
   }
+  function closeModal() { try { if (window.MolotCloseModal) { window.MolotCloseModal(); return; } } catch (e) {} var m = document.getElementById('authModal'); if (m) m.classList.remove('open'); try { document.body.style.overflow = ''; } catch (e2) {} }
   function bindModal() {
     if (bindModal.done || !$("#loginPanel")) return;
     bindModal.done = true;
@@ -47,7 +48,7 @@
     if (f) f.addEventListener("submit", function (e) {
       e.preventDefault(); busy(f, true);
       auth().signUp({ name: $("#rName").value, email: $("#rEmail").value, pass: $("#rPass").value, phone: $("#rPhone").value, agree: $("#rAgree").checked })
-        .then(function (u) { f.reset(); if (meter) paintMeter($("#rPass"), meter); if (window.MolotCloseModal) window.MolotCloseModal(); toast(ru("okReg") + ": " + u.name); })
+        .then(function (u) { f.reset(); if (meter) paintMeter($("#rPass"), meter); closeModal(); toast(ru("okReg") + ": " + u.name); })
         .catch(function (e2) { toast(err(e2), "err"); })
         .then(function () { busy(f, false); });
     });
@@ -55,14 +56,14 @@
     if (l) l.addEventListener("submit", function (e) {
       e.preventDefault(); busy(l, true);
       auth().signIn($("#lEmail").value, $("#lPass").value)
-        .then(function (u) { l.reset(); if (window.MolotCloseModal) window.MolotCloseModal(); toast(ru("okLogin") + ": " + u.name); })
+        .then(function (u) { l.reset(); closeModal(); toast(ru("okLogin") + ": " + u.name); })
         .catch(function (e2) { toast(err(e2), "err"); })
         .then(function () { busy(l, false); });
     });
     var gb = $("#googleBtn");
     if (gb) gb.addEventListener("click", function () {
       auth().signInGoogle()
-        .then(function (u) { if (window.MolotCloseModal) window.MolotCloseModal(); toast(ru("okLogin") + ": " + u.name); })
+        .then(function (u) { closeModal(); toast(ru("okLogin") + (u && u.name ? ": " + u.name : "")); })
         .catch(function (e2) { toast(err(e2), "err"); });
     });
     var fg = $("#forgotPanel");

@@ -9,11 +9,11 @@
       <button class="mclose-x" data-close-modal aria-label="Закрыть">×</button>
     </div>
     <div class="mtabbar" id="authTabs">
-      <button class="mtab active" data-mtab="login" type="button">Вход</button>
-      <button class="mtab" data-mtab="register" type="button">Регистрация</button>
+      <button class="mtab active" data-mtab="register" type="button">Регистрация</button>
+      <button class="mtab" data-mtab="login" type="button">Вход</button>
     </div>
     <div class="mbody">
-      <form class="panel-form" id="loginPanel" novalidate>
+      <form class="panel-form hide" id="loginPanel" novalidate>
         <div class="field"><label for="lEmail">Email</label><input type="email" id="lEmail" placeholder="you@mail.ru" autocomplete="email"></div>
         <div class="field"><label for="lPass">Пароль</label>
           <div class="pass-wrap"><input type="password" id="lPass" placeholder="••••••••" autocomplete="current-password"><button type="button" class="pass-eye" id="lToggle" aria-label="Показать пароль">👁</button></div>
@@ -23,7 +23,7 @@
         <div class="switch-line"><button type="button" data-switch="forgot">Забыли пароль?</button></div>
         <div class="switch-line">Нет аккаунта? <button type="button" data-switch="register">Зарегистрироваться</button></div>
       </form>
-      <form class="panel-form hide" id="registerPanel" novalidate>
+      <form class="panel-form" id="registerPanel" novalidate>
         <div class="form-row">
           <div class="field"><label for="rName">Имя <i>*</i></label><input type="text" id="rName" placeholder="Иван" autocomplete="name" required></div>
           <div class="field"><label for="rEmail">E-mail <i>*</i></label><input type="email" id="rEmail" placeholder="you@mail.ru" autocomplete="email" required></div>

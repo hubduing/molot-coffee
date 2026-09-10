@@ -179,7 +179,7 @@ section{padding:100px 0;position:relative}
 .form-note a{color:var(--accent)}
 
 /* ---------- toast ---------- */
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120%);z-index:200;background:var(--surface2);border:1px solid var(--line);border-left:3px solid var(--ok);padding:16px 24px;font-size:.9rem;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);transition:transform .45s cubic-bezier(.2,.8,.3,1.2);max-width:92vw}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120%);z-index:500;background:var(--surface2);border:1px solid var(--line);border-left:3px solid var(--ok);padding:16px 24px;font-size:.9rem;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);transition:transform .45s cubic-bezier(.2,.8,.3,1.2);max-width:92vw}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.err{border-left-color:var(--warn)}
 .auth-info{font-size:.8rem;color:var(--muted);margin-bottom:20px;background:var(--bg2);border:1px solid var(--line2);padding:12px 16px}
