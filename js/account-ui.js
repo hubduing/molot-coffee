@@ -92,7 +92,7 @@
     var pe = $("#cPhone"), ne = $("#cNameEdit");
     if (pe && !pe.value) pe.value = u.phone || "";
     if (ne && !ne.value) ne.value = u.name || "";
-    var mode = $("#authMode"); if (mode) mode.textContent = A.state.mode === "firebase" ? "☁ облачный аккаунт" : "💾 этот браузер";
+    var mode = $("#authMode"); if (mode) mode.textContent = A.state.mode === "supabase" ? "☁ облачный аккаунт" : "💾 этот браузер";
     A.myBookings().then(function (list) {
       var box = $("#cabBookings"); if (!box) return;
       box.innerHTML = "";
