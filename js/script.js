@@ -1,114 +1,207 @@
 
-(function(){
-  "use strict";
-  var $=function(s,c){return (c||document).querySelector(s)};
-  var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+/* Molot Coffee — main UI: nav / menu / toast / modal / booking.
+ * Depends on: window.MolotAuth (js/auth.js), window.MolotRenderCabinet (js/account-ui.js)
+ * Exposes: MolotToast, MolotTab, MolotOpenModal, MolotCloseModal, MolotRefreshHeader
+ */
+(() => {
+  'use strict';
 
-  var nav=$("#nav");
-  var onScroll=function(){nav.classList.toggle("scrolled",window.scrollY>30)};
-  addEventListener("scroll",onScroll,{passive:true});onScroll();
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const toISODate = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 
-  var burger=$("#burger"),links=$("#navLinks");
-  burger.addEventListener("click",function(){this.classList.toggle("open");links.classList.toggle("open")});
-  $$(".nav-links a").forEach(function(a){a.addEventListener("click",function(){burger.classList.remove("open");links.classList.remove("open")})});
+  /* ---------- Toast ---------- */
+  const toastEl = $('#toast');
+  const toastMsg = $('#toastMsg');
+  let toastTimer = 0;
 
-  var toast=$("#toast"),toastMsg=$("#toastMsg"),toastTimer;
-  function showToast(msg,err){
-    toastMsg.textContent=msg;
-    toast.classList.toggle("err",!!err);
-    toast.classList.add("show");
+  function showToast(msg, isErr = false) {
+    if (!toastEl || !toastMsg) return;
+    toastMsg.textContent = String(msg ?? '');
+    toastEl.classList.toggle('err', Boolean(isErr));
+    toastEl.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer=setTimeout(function(){toast.classList.remove("show")},3800);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3800);
   }
-
-  /* Menu filtering */
-  var tabs=$$(".mtabs"),items=$$(".mitem");
-  function showCat(cat){
-    var idx=0;
-    items.forEach(function(it){
-      var show= it.getAttribute("data-cat")===cat;
-      it.style.display= show?"block":"none";
-      if(show){it.classList.remove("revealed");setTimeout(function(){it.classList.add("revealed")},idx*70);idx++;}
-    });
-  }
-  tabs.forEach(function(t){t.addEventListener("click",function(){
-    tabs.forEach(function(x){x.classList.remove("active")});t.classList.add("active");
-    showCat(t.getAttribute("data-cat"));
-  })});
-
-  /* Reveal on scroll */
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);} });
-  },{threshold:.12});
-  document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)});
-  setTimeout(function(){showCat("coffee")},120);
-
-  /* Storage делегирован в js/auth.js (window.MolotAuth).
-     showToast переиспользуется экранами авторизации. */
   window.MolotToast = showToast;
 
-  /* Modal: 4 экрана — login / register / cabinet / forgot */
-  var modal=$("#authModal");
-  function openModal(){
-    modal.classList.add("open");document.body.style.overflow="hidden";
-    var u=window.MolotAuth&&window.MolotAuth.state.user;
-    setTab(u?"cabinet":"login");
-  }
-  function closeModal(){modal.classList.remove("open");document.body.style.overflow=""}
-  $$("[data-open-modal]").forEach(function(el){el.addEventListener("click",function(e){e.preventDefault();openModal()})});
-  $$("[data-close-modal]").forEach(function(el){el.addEventListener("click",closeModal)});
-  document.addEventListener("keydown",function(e){ if(e.key==="Escape")closeModal(); });
+  /* ---------- Nav ---------- */
+  function initNav() {
+    const nav = $('#nav');
+    if (nav) {
+      const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 30);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
 
-  function setTab(name){
-    $$(".mtab").forEach(function(m){m.classList.toggle("active",m.getAttribute("data-mtab")===name)});
-    ["login","register","cabinet","forgot"].forEach(function(n){
-      var p=$("#"+n+"Panel"); if(p) p.classList.toggle("hide",n!==name);
+    const burger = $('#burger');
+    const links = $('#navLinks');
+    if (burger && links) {
+      burger.addEventListener('click', () => {
+        burger.classList.toggle('open');
+        links.classList.toggle('open');
+      });
+      $$('.nav-links a').forEach((a) => a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        links.classList.remove('open');
+      }));
+    }
+  }
+
+  /* ---------- Menu filtering + reveal ---------- */
+  function initMenu() {
+    const tabs = $$('.mtabs');
+    const items = $$('.mitem');
+    if (!tabs.length || !items.length) return;
+
+    const showCat = (cat) => {
+      let idx = 0;
+      items.forEach((it) => {
+        const show = it.dataset.cat === cat;
+        it.style.display = show ? 'block' : 'none';
+        if (!show) return;
+        it.classList.remove('revealed');
+        setTimeout(() => it.classList.add('revealed'), idx * 70);
+        idx += 1;
+      });
+    };
+
+    tabs.forEach((t) => t.addEventListener('click', () => {
+      tabs.forEach((x) => x.classList.remove('active'));
+      t.classList.add('active');
+      showCat(t.dataset.cat);
+    }));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.12 });
+    $$('.reveal').forEach((el) => io.observe(el));
+
+    setTimeout(() => showCat('coffee'), 120);
+  }
+
+  /* ---------- Auth modal: login / register / cabinet / forgot ---------- */
+  const AUTH_PANELS = ['login', 'register', 'cabinet', 'forgot'];
+  const currentUser = () => window.MolotAuth?.state?.user ?? null;
+
+  function setTab(name) {
+    $$('.mtab').forEach((m) => m.classList.toggle('active', m.dataset.mtab === name));
+    AUTH_PANELS.forEach((n) => {
+      const p = $(`#${n}Panel`);
+      if (p) p.classList.toggle('hide', n !== name);
     });
-    var bar=$("#authTabs"); if(bar) bar.style.display=(name==="cabinet"||name==="forgot")?"none":"flex";
-    if(name==="cabinet") renderCabinet();
+    const bar = $('#authTabs');
+    if (bar) bar.style.display = (name === 'cabinet' || name === 'forgot') ? 'none' : 'flex';
+    if (name === 'cabinet') window.MolotRenderCabinet?.();
   }
-  $$(".mtab").forEach(function(m){m.addEventListener("click",function(){setTab(m.getAttribute("data-mtab"))})});
-  $$("[data-switch]").forEach(function(b){b.addEventListener("click",function(){setTab(b.getAttribute("data-switch"))})});
-  function renderAuth(){
-    var el=$("#authInfo"), A=window.MolotAuth, u=A&&A.state.user;
-    if(el){ el.style.display=u?"block":"none"; if(u){ el.innerHTML=""; } }
-    if(el&&u){ var b=document.createElement("b"); el.appendChild(document.createTextNode("👤 Вы вошли как ")); el.appendChild(b); b.textContent=u.name; el.appendChild(document.createTextNode(" — данные подставим автоматически.")); }
-    var btns=$$("[data-open-modal]"); for(var i=0;i<btns.length;i++){ btns[i].textContent=u?("👤 "+u.name):"Войти"; }
-    var bn=$("#bName"), bp=$("#bPhone");
-    if(u){ if(bn&&!bn.value) bn.value=u.name; if(bp&&!bp.value&&u.phone) bp.value=u.phone; }
+
+  function renderAuthHeader() {
+    const u = currentUser();
+    const info = $('#authInfo');
+    if (info) {
+      info.style.display = u ? 'block' : 'none';
+      info.textContent = '';
+      if (u) {
+        info.append('👤 Вы вошли как ');
+        const b = document.createElement('b');
+        b.textContent = u.name;
+        info.append(b, ' — данные подставим автоматически.');
+      }
+    }
+    $$('[data-open-modal]').forEach((btn) => { btn.textContent = u ? `👤 ${u.name}` : 'Войти'; });
+    if (u) {
+      const bn = $('#bName'), bp = $('#bPhone');
+      if (bn && !bn.value) bn.value = u.name ?? '';
+      if (bp && !bp.value && u.phone) bp.value = u.phone;
+    }
   }
-  function renderCabinet(){ if(window.MolotRenderCabinet) window.MolotRenderCabinet(); }
-  window.MolotTab=setTab; window.MolotRefreshHeader=renderAuth;
-  window.MolotCloseModal=closeModal; window.MolotOpenModal=openModal;
-  if(window.MolotAuth) window.MolotAuth.onAuth(function(){ renderAuth(); renderCabinet(); });
-  renderAuth();
 
-  /* Booking */
-  var dateInput=$("#bDate");
-  (function(){ var t=new Date(),pad=function(n){return("0"+n).slice(-2)};
-    dateInput.min=t.getFullYear()+"-"+pad(t.getMonth()+1)+"-"+pad(t.getDate()); })();
+  function initAuthModal() {
+    const modal = $('#authModal');
+    if (!modal) return;
+    const openModal = () => {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTab(currentUser() ? 'cabinet' : 'login');
+    };
+    const closeModal = () => {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    $$('[data-open-modal]').forEach((el) => el.addEventListener('click', (e) => {
+      e.preventDefault(); openModal();
+    }));
+    $$('[data-close-modal]').forEach((el) => el.addEventListener('click', closeModal));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    $$('.mtab').forEach((m) => m.addEventListener('click', () => setTab(m.dataset.mtab)));
+    $$('[data-switch]').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.switch)));
 
-  $("#bookForm").addEventListener("submit",function(e){
-    e.preventDefault();
-    var name=$("#bName").value.trim(), phone=$("#bPhone").value.trim(),
-        date=dateInput.value, time=$("#bTime").value,
-        guests=$("#bGuests").value, zone=$("#bZone").value;
-    if(!name){showToast("Укажите имя","err");return}
-    if(phone.replace(/\D/g,"").length<10){showToast("Укажите корректный телефон","err");return}
-    if(!date){showToast("Выберите дату","err");return}
-    var chosen=new Date(date+"T00:00:00"), today=new Date();today.setHours(0,0,0,0);
-    if(chosen<today){showToast("Дата уже прошла — выберите другую","err");return}
-    if(!time){showToast("Укажите время","err");return}
-    var form=this;
-    window.MolotAuth.saveBooking({name:name,phone:phone,date:date,time:time,guests:guests,zone:zone}).then(function(){
-      showToast("Спасибо, "+name+"! Столик «"+zone+"» на "+guests+" гост.: "+date+" в "+time+" — подтвердим по телефону ☕");
-      var A=window.MolotAuth, u=A&&A.state.user;
-      if(!u){ var info=$("#authInfo"); info.style.display="block"; info.innerHTML="";
-        var s=document.createElement("b"); s.textContent=name;
-        info.appendChild(document.createTextNode("💡 ")); info.appendChild(s);
-        info.appendChild(document.createTextNode(", зарегистрируйтесь в личном кабинете, чтобы управлять бронями.")); }
-      form.reset(); if(window.MolotRenderCabinet) window.MolotRenderCabinet();
+    window.MolotTab = setTab;
+    window.MolotRefreshHeader = renderAuthHeader;
+    window.MolotCloseModal = closeModal;
+    window.MolotOpenModal = openModal;
+
+    window.MolotAuth?.onAuth?.(() => {
+      renderAuthHeader();
+      window.MolotRenderCabinet?.();
     });
-  });
+    renderAuthHeader();
+  }
 
+  /* ---------- Booking ---------- */
+  function hintRegister(name) {
+    if (currentUser()) return;
+    const info = $('#authInfo');
+    if (!info) return;
+    info.style.display = 'block';
+    info.textContent = '';
+    const b = document.createElement('b');
+    b.textContent = name;
+    info.append('💡 ', b, ', зарегистрируйтесь в личном кабинете, чтобы управлять бронями.');
+  }
+
+  function initBooking() {
+    const form = $('#bookForm');
+    if (!form) return;
+    const dateInput = $('#bDate');
+    if (dateInput) dateInput.min = toISODate(new Date());
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = $('#bName')?.value.trim() ?? '';
+      const phone = $('#bPhone')?.value.trim() ?? '';
+      const date = dateInput?.value ?? '';
+      const time = $('#bTime')?.value ?? '';
+      const guests = $('#bGuests')?.value ?? '';
+      const zone = $('#bZone')?.value ?? '';
+
+      if (name.length < 2) return showToast('Укажите имя', true);
+      if (phone.replace(/\D/g, '').length < 10) return showToast('Укажите корректный телефон', true);
+      if (!date) return showToast('Выберите дату', true);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      if (new Date(`${date}T00:00:00`) < today) return showToast('Дата уже прошла — выберите другую', true);
+      if (!time) return showToast('Укажите время', true);
+      if (!window.MolotAuth) return showToast('Сервис брони временно недоступен', true);
+
+      try {
+        await window.MolotAuth.saveBooking({ name, phone, date, time, guests, zone });
+        showToast(`Спасибо, ${name}! Столик «${zone}» на ${guests} гост.: ${date} в ${time} — подтвердим по телефону ☕`);
+        hintRegister(name);
+        form.reset();
+        window.MolotRenderCabinet?.();
+      } catch {
+        showToast('Не удалось сохранить бронь. Попробуйте ещё раз.', true);
+      }
+    });
+  }
+
+  initNav();
+  initMenu();
+  initAuthModal();
+  initBooking();
 })();
