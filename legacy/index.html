@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МОЛОТ — спешалти кофейня</title>
+<meta name="description" content="МОЛОТ — спешалти кофейня. Моно-сорта, свежая обжарка и завтраки с 2014 года.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo"><span class="mark">М</span>МОЛОТ<b>·</b>КОФЕ</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#menu">Меню</a>
+      <a href="#story">История</a>
+      <a href="#book">Столик</a>
+      <a href="#" class="btn btn-ghost nav-cta" data-open-modal>Регистрация</a>
+      <a href="#book" class="btn btn-accent nav-cta nav-book">Заказать столик</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Спешалти кофейня · с 2014</span>
+        <h1>Кофе,<br>обжаренный <em>с душой</em></h1>
+        <p class="lead">Моно-сорта из Эфиопии, Колумбии и Кении, обжарка малыми партиями каждые 48 часов и десерты, которые пекут утром до открытия.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn btn-accent">Смотреть меню <span class="arr">→</span></a>
+          <a href="#book" class="btn btn-ghost">Забронировать</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b>27</b><span>сортов зерна</span></div>
+          <div class="stat"><b>48ч</b><span>срок свежести</span></div>
+          <div class="stat"><b>9.4</b><span>рейтинг гостей</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="ring"></div><div class="ring2"></div>
+        <div class="orbit"><span></span></div>
+        <div class="cup">
+          <div class="steam"><i></i><i></i><i></i></div>
+        </div>
+        <div class="chip chip-tl">🌡 <b>94°</b>&nbsp;вода</div>
+        <div class="chip chip-br">⚖ <b>18&nbsp;г</b>&nbsp;на порцию</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">Листайте вниз</div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div><span class="sec-num">01 · Наше меню</span>
+      <h2>Выбирай <em>по вкусу</em></h2></div>
+      <div class="sec-sub">Обновляемся каждые две недели следом за новой обжаркой</div>
+    </div>
+    <div class="menu-tabs">
+      <button class="mtabs active" data-cat="coffee">Кофе</button>
+      <button class="mtabs" data-cat="tea">Чай</button>
+      <button class="mtabs" data-cat="dessert">Десерты</button>
+      <button class="mtabs" data-cat="breakfast">Завтраки</button>
+    </div>
+    <div class="menu-grid" id="menuGrid"><!-- рендерится из js/menu-data.js --></div>
+  </div>
+</section>
+<!-- STORY -->
+<section id="story">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-photo reveal">
+        <div class="sframe"></div>
+        <div class="sface">
+          <cite>«Мы обжариваем только то, что пьём сами»</cite>
+          <span>— Олег Молот, основатель</span>
+        </div>
+      </div>
+      <div class="story-txt reveal">
+        <span class="sec-num">02 · Наша история</span>
+        <h2 style="font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3rem);line-height:1.02;margin-bottom:24px">Философия <em style="color:var(--accent);font-style:italic">зерна</em></h2>
+        <p><span class="drop">В</span> 2014 году мы купили первую рожковую кофеварку и начали обжаривать зерно на балконе. Сегодня малая обжарка каждые <b>48 часов</b> остаётся нашим главным ритуалом.</p>
+        <p>Мы ездим к фермерам в Эфиопию и Колумбию, платим за спелую ягоду и возвращаем часть выручки в кооперативы. <b>Свежесть здесь — закон</b>, а не маркетинг.</p>
+        <div class="story-cols">
+          <div class="cell"><b>10 лет</b><span>напитка</span></div>
+          <div class="cell"><b>7 стран</b><span>происхождения</span></div>
+          <div class="cell"><b>4 сорта</b><span>декафа</span></div>
+          <div class="cell"><b>100%</b><span>прямые закупки</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="sec-num">03 · Бронирование</span>
+      <h2>Закажи <em>столик</em></h2></div>
+      <div class="sec-sub">Уютный зал на 42 места, тихая зона и веранда с видом на парк</div>
+    </div>
+    <div class="books-grid">
+      <div class="book-info reveal">
+        <p>Оставьте заявку — подтвердим бронь по телефону в течение 15 минут в рабочее время. Вечерами пятницы и субботы рекомендуем бронировать заранее.</p>
+        <div class="contact-row"><span class="lbl">Адрес</span><span class="val">ул. Прожжарная, 12с2</span></div>
+        <div class="contact-row"><span class="lbl">Телефон</span><span class="val"><b>+7 (495) 120-14-14</b></span></div>
+        <div class="contact-row"><span class="lbl">Почта</span><span class="val">hello@molot.coffee</span></div>
+        <div class="hours-bar">
+          <div class="hb"><b>Пн — Чт</b><span>08:00 — 22:00</span></div>
+          <div class="hb"><b>Пт — Сб</b><span>09:00 — 00:00</span></div>
+          <div class="hb"><b>Воскресенье</b><span>09:00 — 21:00</span></div>
+          <div class="hb"><b>Доставка</b><span>10:00 — 20:00</span></div>
+        </div>
+      </div>
+      <div class="form-card reveal" id="bookingPanel">
+        <h3>Бронь столика</h3>
+        <div class="formsub">Бесплатно · подтвердим за 15 минут</div>
+        <div class="auth-info" id="authInfo" style="display:none"></div>
+        <form id="bookForm" novalidate>
+          <div class="form-row">
+            <div class="field"><label>Имя <i>*</i></label><input type="text" id="bName" placeholder="Как к вам обращаться" required></div>
+            <div class="field"><label>Телефон <i>*</i></label><input type="tel" id="bPhone" placeholder="+7 (___) ___-__-__" required></div>
+          </div>
+          <div class="form-row3">
+            <div class="field"><label>Дата <i>*</i></label><input type="date" id="bDate" required></div>
+            <div class="field"><label>Время <i>*</i></label><input type="time" id="bTime" value="19:00" required></div>
+            <div class="field"><label>Гостей</label>
+              <select id="bGuests">
+                <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6+</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Зона</label>
+            <select id="bZone">
+              <option>Общий зал</option><option>Тихая зона</option><option>Веранда</option><option>У окна</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-accent btn-block">Забронировать столик</button>
+          <div class="form-note">Нажимая кнопку, вы соглашаетесь с <a href="#">политикой обработки данных</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- MODAL (контент подставляется из js/auth-modal.js при первом открытии) -->
+<div class="modal" id="authModal" role="dialog" aria-modal="true"></div>
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="#top" class="logo footer-logo"><span class="mark">М</span>МОЛОТ<b>·</b>КОФЕ</a>
+        <p class="footer-about">Локальная спешалти-обжарка и кофейня в самом сердце города. Варим, печём и живём со вкусом с 2014 года.</p>
+      </div>
+      <div><h5>Меню</h5>
+        <ul><li><a href="#menu">Кофе</a></li><li><a href="#menu">Чай</a></li><li><a href="#menu">Десерты</a></li><li><a href="#menu">Завтраки</a></li></ul>
+      </div>
+      <div><h5>Гостям</h5>
+        <ul><li><a href="#book">Бронь столика</a></li><li><a href="#" data-open-modal>Регистрация</a></li><li><a href="#story">Наша история</a></li><li><a href="#">Доставка</a></li></ul>
+      </div>
+      <div><h5>Контакты</h5>
+        <p>ул. Прожжарная, 12с2</p>
+        <p class="contact-line">+7 (495) 120-14-14</p>
+        <p class="contact-line">hello@molot.coffee</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 МОЛОТ·КОФЕ. Все права защищены.</span>
+      <span>Сделано с ♥ и лишней чашкой эспрессо</span>
+    </div>
+  </div>
+</footer>
+<script src="js/supabase-config.js" defer></script>
+<script src="js/auth-supabase.js" defer></script>
+<script src="js/menu-data.js" defer></script>
+<script src="js/menu.js" defer></script>
+<script src="js/auth-modal.js" defer></script>
+<script src="js/script.js" defer></script>
+<script src="js/account-ui.js" defer></script>
+</body>
+</html>

@@ -1,99 +1,98 @@
-# МОЛОТ·КОФЕ — спешалти кофейня
+# МОЛОТ — спешалти кофейня (React + Vite)
 
-Лендинг + личный кабинет спешалти-кофейни «МОЛОТ». Чистый HTML/CSS/JS без сборки: меню с табами, бронь столика, регистрация/вход через Supabase Auth с fallback в `localStorage`.
+Лендинг + личный кабинет кофейни «МОЛОТ». Проект переписан на **React (Vite, JS)**:
+меню с табами, бронь столика, регистрация / вход через **Supabase Auth** с fallback в `localStorage`.
 
-Репозиторий: https://github.com/hubduing/molot-coffee.git
+Репозиторий: https://github.com/hubduing/molot-coffee.git · ветка: `feat/react-migration`
 
-## Возможности
+## Стек
 
-- Лендинг: Hero, меню (Кофе / Чай / Десерты / Завтраки), история, бронь, футер.
-- Бронь столика: имя, телефон, дата, время, гости, зона. Работает без входа.
-- Auth: регистрация / вход / выход через Supabase Auth (`auth-supabase.js`).
-- Личный кабинет: профиль (имя, телефон), список своих броней, отмена (`account-ui.js`).
-- Fallback: если anon key не задан или нет сети — auth и брони хранятся локально (`molot_users_v2`, `molot_session_v2`, `molot_bookings_v2` в `localStorage`).
-- UI: адаптив, бургер-меню, модалка входа, тосты, reveal-анимации.
+- React 19 + Vite 8 (`@vitejs/plugin-react`)
+- `@supabase/supabase-js` v2 (Auth + таблицы `profiles` / `bookings`)
+- Чистый CSS (`src/index.css`, портирован 1-в-1 из legacy)
+- Шрифты: Fraunces + Manrope (Google Fonts, `index.html`)
+
+## Быстрый старт
+
+```powershell
+cd "D:\1WORK\AI\063"
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # прод-сборка в dist/
+npm run preview  # проверка сборки
+```
+
+Node.js LTS (проверено на Node 25 + npm 11).
 
 ## Структура
 
 ```
-index.html             — вся разметка лендинга
-css/style.css          — все стили
-js/supabase-config.js  — URL + anon key проекта Supabase
-js/auth-supabase.js    — window.MolotAuth (Supabase + local fallback)
-js/auth-modal.js       — модалка входа/регистрации
-js/account-ui.js       — кабинет (профиль + брони)
-js/menu-data.js        — данные меню (window.MOLOT_MENU)
-js/menu.js             — рендер меню и табы
-js/script.js           — nav / toast / бронирование / инициализация
-supabase-schema.sql    — таблицы profiles, bookings + RLS + триггер
+index.html                  # точка входа Vite, <div id="root">
+vite.config.js              # плагин @vitejs/plugin-react
+src/main.jsx                # ReactDOM.createRoot + StrictMode
+src/App.jsx                 # AuthProvider + Navbar / Hero / MenuSection / Story / BookingForm / Footer / AuthModal / Toast
+src/index.css               # все стили лендинга
+src/data/menu.js            # MOLOT_MENU + MENU_CATS (порт legacy/js/menu-data.js)
+src/lib/supabase.js         # SUPABASE_URL / SUPABASE_ANON_KEY из .env.local (VITE_*)
+src/lib/auth.js             # Supabase (облако) + localStorage-fallback, ключи molot_users_v2 / molot_session_v2 / molot_bookings_v2
+src/context/AuthContext.jsx # ready / mode / user / toast, boot + onAuthStateChange, обработка OAuth-ошибок из URL
+src/components/
+  Navbar.jsx                # шапка, кнопка «Войти/Профиль», CTA «Забронировать»
+  Hero.jsx                  # первый экран
+  MenuSection.jsx           # табы Кофе / Чай / Десерты / Завтраки
+  Story.jsx                 # блок «История»
+  BookingForm.jsx           # форма брони (гость без входа тоже может), сохраняет в Supabase/local
+  Footer.jsx                # контакты, вход в кабинет
+  AuthModal.jsx             # табы Регистрация / Вход / Сброс; Google OAuth; локальный сброс пароля
+  Toast.jsx                 # уведомления из AuthContext
+legacy/                     # старый ванильный HTML/CSS/JS (только для сверки, не используется сборкой)
+supabase-schema.sql         # SQL для Supabase Dashboard → SQL Editor
+.env.example                # образец переменных окружения
 ```
 
-## Быстрый старт
+## Переменные окружения / Supabase
 
-Вариант 1 — просто открыть файл:
+1. Выполните `supabase-schema.sql` в Supabase Dashboard → SQL Editor
+   (таблицы `profiles`, `bookings`, RLS-политики, триггер `handle_new_user`).
+2. Скопируйте `.env.example` в `.env.local` и вставьте `anon key`:
 
 ```powershell
-Start-Process "D:\1WORK\AI\063\index.html"
+Copy-Item .env.example .env.local
 ```
 
-Вариант 2 — локальный сервер (рекомендуется):
-
-```powershell
-cd "D:\1WORK\AI\063"
-python -m http.server 8000
-# открыть http://localhost:8000
+```env
+VITE_SUPABASE_URL=https://xpcatojxhxjmfoeayymw.supabase.co
+VITE_SUPABASE_ANON_KEY=PASTE_ANON_KEY_HERE
 ```
 
-Альтернатива через Node:
+3. Включите Email (и Google при желании) в Authentication → Providers.
+4. Настройте Redirect URL (`http://localhost:5173` для dev) в Authentication → URL Configuration.
 
-```powershell
-npx serve "D:\1WORK\AI\063"
-```
+Без ключей приложение работает в режиме `local`: пользователи и брони хранятся
+в `localStorage`, вход через Google показывает подсказку про `needCloud`.
 
-Деплой не требует сборки — залить папку как статический сайт (GitHub Pages / Netlify / Vercel / любой хостинг).
+## Возможности
 
-## Настройка Supabase
+- Меню с категориями и reveal-анимацией (`IntersectionObserver` в `App.jsx`).
+- Бронирование столика: имя / телефон / дата / время / гости / зона; гостевое бронирование без входа.
+- Auth: регистрация, вход, сброс пароля (email через Supabase / локальный через `setNewPasswordLocal`), Google OAuth, обновление профиля (имя, телефон → `auth.user_metadata` + `profiles`).
+- Кабинет: список своих броней (`myBookings`, до 20, сортировка по `created_at`), выход.
+- Валидация и русские тексты ошибок — словарь `RU` в `src/lib/auth.js` (коды `T0–T10`).
+- Тосты 3.8 c, закрытие модалки по Esc / клику по оверлею.
 
-1. Создать проект на https://supabase.com.
-2. В Dashboard → SQL Editor выполнить `supabase-schema.sql` (создаст `profiles`, `bookings`, RLS-политики, триггер `handle_new_user`).
-3. В Dashboard → Settings → API скопировать `anon public` ключ.
-4. Вставить его в `js/supabase-config.js`:
+## Скрипты
 
-```js
-window.MOLOT_SUPABASE_URL = "https://xpcatojxhxjmfoeayymw.supabase.co";
-window.MOLOT_SUPABASE_ANON_KEY = "PASTE_ANON_KEY_HERE";
-```
+| Команда | Назначение |
+|---|---|
+| `npm run dev` | dev-сервер Vite |
+| `npm run build` | прод-сборка в `dist/` |
+| `npm run preview` | предпросмотр `dist/` |
 
-5. В Authentication → Providers включить Email. Подтверждение email — по желанию.
+## Legacy
 
-Схема таблиц — см. `supabase-schema.sql`:
+Каталог `legacy/` — архив ванильной версии (`index.html`, `css/style.css`, `js/*`).
+Vite его не собирает; оставлен для сверки стилей и логики (`auth-supabase.js` → `src/lib/auth.js`, `menu-data.js` → `src/data/menu.js`, `script.js` → reveal в `App.jsx`).
 
-- `profiles(id uuid PK -> auth.users, email, name, phone)` — RLS: только своя строка.
-- `bookings(id, user_id, name, phone, date, time, guests, zone, email)` — RLS: `INSERT` для всех (гостевая бронь), `SELECT/DELETE` только свои.
+## Контакты (демо)
 
-Если ключ не задан — сайт работает в локальном режиме (`mode: "local"`).
-
-## Скрипты и API
-
-Порядок подключения в `index.html`: `supabase-config.js` → `auth-supabase.js` → `menu-data.js` → `menu.js` → `auth-modal.js` → `script.js` → `account-ui.js`. Все с `defer`. Supabase JS SDK подгружается динамически из CDN внутри `auth-supabase.js` (только если задан anon key).
-
-`window.MolotAuth`:
-
-```js
-MolotAuth.onReady(cb)                 // cb({ready, mode, user})
-MolotAuth.onAuth(cb)                  // подписка на смену пользователя
-MolotAuth.getState()                  // {ready, mode: 'supabase'|'local', user}
-MolotAuth.register({name,email,pass}) // -> Promise<user>
-MolotAuth.login({email,pass})
-MolotAuth.logout()
-MolotAuth.updateProfile({name,phone})
-MolotAuth.listBookings()              // свои брони
-MolotAuth.createBooking({name,phone,date,time,guests,zone})
-MolotAuth.cancelBooking(id)
-```
-
-Меню: добавить позицию — дописать объект в `window.MOLOT_MENU` (`js/menu-data.js`): `{ cat: 'coffee'|'tea'|'dessert'|'breakfast', name, price, desc, tags: [{t, c}] }`.
-
-## Контакты (демо-данные на сайте)
-
-- ул. Прожжарная, 12с2 · +7 (495) 120-14-14 · hello@molot.coffee
+См. подвал лендинга: 12-я линия, д. 2 и +7 (495) 120-14-14, hello@molot.coffee.
