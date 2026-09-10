@@ -30,7 +30,9 @@
     }
     return s;
   }
-  document.addEventListener("DOMContentLoaded", function () {
+  function bindModal() {
+    if (bindModal.done || !$("#loginPanel")) return;
+    bindModal.done = true;
     var rPass = $("#rPass"), meter = $("#passMeter");
     if (rPass && meter) rPass.addEventListener("input", function () { paintMeter(rPass, meter); });
     var lToggle = $("#lToggle"), rToggle = $("#rToggle");
@@ -76,7 +78,10 @@
         }
       }).catch(function (e2) { toast(err(e2), "err"); }).then(function () { busy(fg, false); });
     });
-  });
+  }
+  // Модалка теперь ленивая: биндимся когда она вставлена в DOM.
+  document.addEventListener("molot:modal-ready", bindModal);
+  document.addEventListener("DOMContentLoaded", bindModal);
   window.MolotRenderCabinet = function () {
     var A = auth(); if (!A) return;
     var u = A.state.user;

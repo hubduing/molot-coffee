@@ -49,30 +49,12 @@
     }
   }
 
-  /* ---------- Menu filtering + reveal ---------- */
+  /* ---------- Reveal on scroll ---------- */
   function initMenu() {
-    const tabs = $$('.mtabs');
-    const items = $$('.mitem');
-    if (!tabs.length || !items.length) return;
-
-    const showCat = (cat) => {
-      let idx = 0;
-      items.forEach((it) => {
-        const show = it.dataset.cat === cat;
-        it.style.display = show ? 'block' : 'none';
-        if (!show) return;
-        it.classList.remove('revealed');
-        setTimeout(() => it.classList.add('revealed'), idx * 70);
-        idx += 1;
-      });
-    };
-
-    tabs.forEach((t) => t.addEventListener('click', () => {
-      tabs.forEach((x) => x.classList.remove('active'));
-      t.classList.add('active');
-      showCat(t.dataset.cat);
-    }));
-
+    if (!('IntersectionObserver' in window)) {
+      $$('.reveal').forEach((el) => el.classList.add('in'));
+      return;
+    }
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
@@ -81,15 +63,16 @@
       });
     }, { threshold: 0.12 });
     $$('.reveal').forEach((el) => io.observe(el));
-
-    setTimeout(() => showCat('coffee'), 120);
   }
 
   /* ---------- Auth modal: login / register / cabinet / forgot ---------- */
   const AUTH_PANELS = ['login', 'register', 'cabinet', 'forgot'];
+  let pendingTab = null;
   const currentUser = () => window.MolotAuth?.state?.user ?? null;
 
   function setTab(name) {
+    // Модалка ленивая: контента может ещё не быть — просто запоминаем таб.
+    if (!document.getElementById('loginPanel')) { pendingTab = name; return; }
     $$('.mtab').forEach((m) => m.classList.toggle('active', m.dataset.mtab === name));
     AUTH_PANELS.forEach((n) => {
       const p = $(`#${n}Panel`);
@@ -124,22 +107,36 @@
   function initAuthModal() {
     const modal = $('#authModal');
     if (!modal) return;
-    const openModal = () => {
-      modal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      setTab(currentUser() ? 'cabinet' : 'login');
-    };
     const closeModal = () => {
       modal.classList.remove('open');
       document.body.style.overflow = '';
     };
-    $$('[data-open-modal]').forEach((el) => el.addEventListener('click', (e) => {
-      e.preventDefault(); openModal();
-    }));
-    $$('[data-close-modal]').forEach((el) => el.addEventListener('click', closeModal));
+    const ensureModalContent = () => {
+      if (modal.querySelector('.mcard')) return true;
+      if (!window.MolotAuthModalTemplate) return false;
+      modal.innerHTML = window.MolotAuthModalTemplate;
+      modal.addEventListener('click', (e) => {
+        if (e.target.closest('[data-close-modal]')) { closeModal(); return; }
+        const tab = e.target.closest('.mtab');
+        if (tab) { setTab(tab.dataset.mtab); return; }
+        const sw = e.target.closest('[data-switch]');
+        if (sw) setTab(sw.dataset.switch);
+      });
+      document.dispatchEvent(new CustomEvent('molot:modal-ready'));
+      return true;
+    };
+    const openModal = () => {
+      if (!ensureModalContent()) return showToast('Личный кабинет загружается…', true);
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      const next = pendingTab || (currentUser() ? 'cabinet' : 'login');
+      pendingTab = null;
+      setTab(next);
+    };
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-open-modal]')) { e.preventDefault(); openModal(); }
+    });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-    $$('.mtab').forEach((m) => m.addEventListener('click', () => setTab(m.dataset.mtab)));
-    $$('[data-switch]').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.switch)));
 
     window.MolotTab = setTab;
     window.MolotRefreshHeader = renderAuthHeader;

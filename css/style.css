@@ -218,6 +218,15 @@ footer{border-top:1px solid var(--line2);padding:70px 0 34px}
 
 
 
+/* инлайн-стили, вынесенные из index.html */
+.nav-cta{padding:11px 20px}
+a.nav-cta.btn-accent{padding:11px 22px}
+.footer-logo{margin-bottom:18px}
+.footer-about{margin-top:16px;max-width:32ch}
+.contact-line{margin-top:8px}
+#googleBtn{margin-top:10px}
+.cabinet-bookings-title{margin-top:18px}
+
 /* ---------- MODAL ---------- */
 .modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
 .modal.open{display:flex}
