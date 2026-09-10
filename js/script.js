@@ -43,16 +43,16 @@
   document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)});
   setTimeout(function(){showCat("coffee")},120);
 
-  /* Storage */
-  function users(){ try{return JSON.parse(localStorage.getItem("molot_users"))||{}}catch(e){return{}} }
-  function saveUsers(u){ localStorage.setItem("molot_users",JSON.stringify(u)) }
-  function current(){ return localStorage.getItem("molot_user") }
+  /* Storage делегирован в js/auth.js (window.MolotAuth).
+     showToast переиспользуется экранами авторизации. */
+  window.MolotToast = showToast;
 
-  /* Modal */
+  /* Modal: 4 экрана — login / register / cabinet / forgot */
   var modal=$("#authModal");
   function openModal(){
-    if(current()){showToast("Вы уже вошли как "+current()+" ☕");return}
-    modal.classList.add("open");document.body.style.overflow="hidden";setTab("login");
+    modal.classList.add("open");document.body.style.overflow="hidden";
+    var u=window.MolotAuth&&window.MolotAuth.state.user;
+    setTab(u?"cabinet":"login");
   }
   function closeModal(){modal.classList.remove("open");document.body.style.overflow=""}
   $$("[data-open-modal]").forEach(function(el){el.addEventListener("click",function(e){e.preventDefault();openModal()})});
@@ -61,49 +61,26 @@
 
   function setTab(name){
     $$(".mtab").forEach(function(m){m.classList.toggle("active",m.getAttribute("data-mtab")===name)});
-    $("#loginPanel").classList.toggle("hide",name!=="login");
-    $("#registerPanel").classList.toggle("hide",name!=="register");
+    ["login","register","cabinet","forgot"].forEach(function(n){
+      var p=$("#"+n+"Panel"); if(p) p.classList.toggle("hide",n!==name);
+    });
+    var bar=$("#authTabs"); if(bar) bar.style.display=(name==="cabinet"||name==="forgot")?"none":"flex";
+    if(name==="cabinet") renderCabinet();
   }
   $$(".mtab").forEach(function(m){m.addEventListener("click",function(){setTab(m.getAttribute("data-mtab"))})});
   $$("[data-switch]").forEach(function(b){b.addEventListener("click",function(){setTab(b.getAttribute("data-switch"))})});
-/* Register */
-  $("#registerPanel").addEventListener("submit",function(e){
-    e.preventDefault();
-    var name=$("#rName").value.trim(), email=$("#rEmail").value.trim().toLowerCase(),
-        pass=$("#rPass").value, phone=$("#rPhone").value.trim();
-    if(name.length<2){showToast("Укажите имя","err");return}
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showToast("Неверный e-mail","err");return}
-    if(pass.length<6){showToast("Пароль — минимум 6 символов","err");return}
-    if(!$("#rAgree").checked){showToast("Примите условия использования","err");return}
-    var u=users();
-    if(u[email]){showToast("Такой e-mail уже зарегистрирован","err");return}
-    u[email]={name:name,pass:pass,phone:phone};
-    saveUsers(u);
-    localStorage.setItem("molot_user",name);
-    closeModal();
-    renderAuth();
-    showToast("Добро пожаловать, "+name+"! Аккаунт создан ☕");
-    this.reset();
-  });
-
-  /* Login */
-  $("#loginPanel").addEventListener("submit",function(e){
-    e.preventDefault();
-    var email=$("#lEmail").value.trim().toLowerCase(), passed=$("#lPass").value;
-    var u=users()[email];
-    if(!u||u.pass!==passed){showToast("Неверный e-mail или пароль","err");return}
-    localStorage.setItem("molot_user",u.name);
-    closeModal();
-    renderAuth();
-    showToast("С возвращением, "+u.name+"!");
-    this.reset();
-  });
-
   function renderAuth(){
-    var el=$("#authInfo"), name=current();
-    el.style.display= name?"block":"none";
-    if(name) el.innerHTML="👤 Вы вошли как <b>"+name+"</b> — данные подставим автоматически.";
+    var el=$("#authInfo"), A=window.MolotAuth, u=A&&A.state.user;
+    if(el){ el.style.display=u?"block":"none"; if(u){ el.innerHTML=""; } }
+    if(el&&u){ var b=document.createElement("b"); el.appendChild(document.createTextNode("👤 Вы вошли как ")); el.appendChild(b); b.textContent=u.name; el.appendChild(document.createTextNode(" — данные подставим автоматически.")); }
+    var btns=$$("[data-open-modal]"); for(var i=0;i<btns.length;i++){ btns[i].textContent=u?("👤 "+u.name):"Войти"; }
+    var bn=$("#bName"), bp=$("#bPhone");
+    if(u){ if(bn&&!bn.value) bn.value=u.name; if(bp&&!bp.value&&u.phone) bp.value=u.phone; }
   }
+  function renderCabinet(){ if(window.MolotRenderCabinet) window.MolotRenderCabinet(); }
+  window.MolotTab=setTab; window.MolotRefreshHeader=renderAuth;
+  window.MolotCloseModal=closeModal; window.MolotOpenModal=openModal;
+  if(window.MolotAuth) window.MolotAuth.onAuth(function(){ renderAuth(); renderCabinet(); });
   renderAuth();
 
   /* Booking */
@@ -122,13 +99,16 @@
     var chosen=new Date(date+"T00:00:00"), today=new Date();today.setHours(0,0,0,0);
     if(chosen<today){showToast("Дата уже прошла — выберите другую","err");return}
     if(!time){showToast("Укажите время","err");return}
-    showToast("Спасибо, "+name+"! Столик «"+zone+"» на "+guests+" гост.: "+date+" в "+time+" — подтвердим по телефону ☕");
-    if(!current()){
-      var info=$("#authInfo");
-      info.style.display="block";
-      info.innerHTML="💡 <b>"+name+"</b>, зарегистрируйтесь в&nbsp;личном кабинете, чтобы управлять бронями.";
-    }
-    this.reset();
+    var form=this;
+    window.MolotAuth.saveBooking({name:name,phone:phone,date:date,time:time,guests:guests,zone:zone}).then(function(){
+      showToast("Спасибо, "+name+"! Столик «"+zone+"» на "+guests+" гост.: "+date+" в "+time+" — подтвердим по телефону ☕");
+      var A=window.MolotAuth, u=A&&A.state.user;
+      if(!u){ var info=$("#authInfo"); info.style.display="block"; info.innerHTML="";
+        var s=document.createElement("b"); s.textContent=name;
+        info.appendChild(document.createTextNode("💡 ")); info.appendChild(s);
+        info.appendChild(document.createTextNode(", зарегистрируйтесь в личном кабинете, чтобы управлять бронями.")); }
+      form.reset(); if(window.MolotRenderCabinet) window.MolotRenderCabinet();
+    });
   });
 
 })();

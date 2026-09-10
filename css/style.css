@@ -237,4 +237,28 @@ footer{border-top:1px solid var(--line2);padding:70px 0 34px}
 .panel-form{display:block}
 .panel-form.hide{display:none}
 .switch-line{text-align:center;color:var(--muted2);font-size:.8rem;margin-top:18px}
-.switch-line button{background:none;border:0;color:var(--accent);font-size:.8rem}
+.switch-line button{background:none;border:0;color:var(--accent);font-size:.8rem;cursor:pointer}
+.switch-line button:hover{text-decoration:underline}
+/* auth extras */
+.pass-wrap{position:relative}
+.pass-wrap input{padding-right:44px}
+.pass-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:1.05rem;cursor:pointer;opacity:.75}
+.pass-eye:hover{opacity:1}
+.pass-meter{display:flex;gap:6px;margin-top:8px}
+.pass-meter i{flex:1;height:4px;background:rgba(217,154,61,.15);border-radius:2px;transition:.3s}
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:var(--muted);cursor:pointer;margin-bottom:16px}
+.agree input{width:auto;margin-top:3px}
+.agree a{color:var(--accent)}
+.mini-title{font-family:var(--serif);font-size:1.15rem;font-weight:400;margin-bottom:6px}
+.mini-sub{color:var(--muted2);font-size:.8rem;margin-bottom:16px}
+.cab-head{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.cab-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#1a0f05;font-weight:700;font-size:1.4rem;display:flex;align-items:center;justify-content:center;flex:none}
+.cab-name{font-weight:700}
+.cab-email{color:var(--muted);font-size:.82rem}
+.cab-mode{color:var(--muted2);font-size:.74rem}
+.bk-list{max-height:180px;overflow:auto;margin:10px 0 14px;display:flex;flex-direction:column;gap:8px;font-size:.82rem}
+.bk-row{background:var(--bg2);border:1px solid var(--line2);padding:10px 12px}
+.bk-row b{color:var(--accent)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text);padding:13px 15px;font-size:.9rem;cursor:pointer}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.mcard{max-height:92vh;overflow:auto}
