@@ -35,6 +35,9 @@ function profOf(uid) {
 }
 function sbErr(e) {
   var m = String((e && e.message) || "").toLowerCase();
+  // OAuth / provider-ошибки показываем как есть (в консоли), пользователю — понятный текст.
+  if (/provider.*not.*enabl|unsupported provider|validation failed.*provider/i.test(m)) return "OAuth-провайдер Google выключен в Supabase Dashboard → Authentication → Providers.";
+  if (/redirect.*url|redirect_uri/i.test(m)) return "Redirect URL не разрешён в Supabase Dashboard → Authentication → URL Configuration. Добавьте адрес сайта.";
   if (/already registered|already exists|duplicate/i.test(m)) return "T5";
   if (/invalid login|invalid.*credential|wrong|incorrect|password/i.test(m)) return "T9";
   if (/not found|no user|not confirmed/i.test(m)) return "T8";
@@ -179,8 +182,13 @@ api.myBookings = function () {
 };
 api.signInGoogle = function () {
   if (ST.mode !== "supabase" || !SB) return Promise.reject(new Error("needCloud"));
-  return SB.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } })
-    .then(function (r) { if (r.error) throw new Error("T0"); return null; });
+  if (location.protocol === "file:") return Promise.reject(new Error("Откройте сайт через http://localhost или залейте на хостинг — OAuth не работает с file://."));
+  return SB.auth.signInWithOAuth({ provider: "google",
+    options: { redirectTo: location.origin + location.pathname, skipBrowserRedirect: false } })
+    .then(function (r) {
+      if (r.error) { try { console.error("[MolotAuth] Google OAuth:", r.error); } catch (e) {} throw new Error(sbErr(r.error)); }
+      return null; // дальше браузер уйдёт на Google, затем вернётся на redirectTo
+    }, function (e) { try { console.error("[MolotAuth] Google OAuth:", e); } catch (e2) {} throw new Error(sbErr(e)); });
 };
 api.t = function (c) { return (api.RU && api.RU[c]) || c; };
 ["signUp", "signIn", "signInGoogle", "resetPassword", "setNewPasswordLocal", "updateProfile"].forEach(function (k) {

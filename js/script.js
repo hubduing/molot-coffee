@@ -197,8 +197,24 @@
     });
   }
 
+  /* ---------- OAuth callback errors (?error=... после возврата с Google) ---------- */
+  function showOAuthCallbackError() {
+    try {
+      const q = new URLSearchParams(location.search);
+      const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+      const err = q.get('error') || h.get('error');
+      const desc = q.get('error_description') || h.get('error_description');
+      if (!err && !desc) return;
+      const msg = desc ? decodeURIComponent(desc.replace(/\+/g, ' ')) : err;
+      showToast(`Вход через Google не удался: ${msg}`, true);
+      // чистим URL, чтобы не показывать ошибку повторно
+      history.replaceState(null, '', location.pathname + location.search.replace(/[?&]error[^&]*/g, '').replace(/[?&]error_description[^&]*/g, ''));
+    } catch { /* noop */ }
+  }
+
   initNav();
   initMenu();
   initAuthModal();
   initBooking();
+  showOAuthCallbackError();
 })();
