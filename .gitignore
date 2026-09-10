@@ -1,0 +1,7 @@
+# Ignore temp/system files
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+.idea/
+.vscode/

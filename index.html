@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МОЛОТ — спешалти кофейня</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo"><span class="mark">М</span>МОЛОТ<b>·</b>КОФЕ</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#menu">Меню</a>
+      <a href="#story">История</a>
+      <a href="#book">Столик</a>
+      <a href="#" class="btn btn-ghost" data-open-modal style="padding:11px 20px">Войти</a>
+      <a href="#book" class="btn btn-accent" style="padding:11px 22px">Заказать столик</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Спешалти кофейня · с 2014</span>
+        <h1>Кофе,<br>обжаренный <em>с душой</em></h1>
+        <p class="lead">Моно-сорта из Эфиопии, Колумбии и Кении, обжарка малыми партиями каждые 48 часов и десерты, которые пекут утром до открытия.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn btn-accent">Смотреть меню <span class="arr">→</span></a>
+          <a href="#book" class="btn btn-ghost">Забронировать</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b>27</b><span>сортов зерна</span></div>
+          <div class="stat"><b>48ч</b><span>срок свежести</span></div>
+          <div class="stat"><b>9.4</b><span>рейтинг гостей</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="ring"></div><div class="ring2"></div>
+        <div class="orbit"><span></span></div>
+        <div class="cup">
+          <div class="steam"><i></i><i></i><i></i></div>
+        </div>
+        <div class="chip chip-tl">🌡 <b>94°</b>&nbsp;вода</div>
+        <div class="chip chip-br">⚖ <b>18&nbsp;г</b>&nbsp;на порцию</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">Листайте вниз</div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div><span class="sec-num">01 · Наше меню</span>
+      <h2>Выбирай <em>по вкусу</em></h2></div>
+      <div class="sec-sub">Обновляемся каждые две недели следом за новой обжаркой</div>
+    </div>
+    <div class="menu-tabs">
+      <button class="mtabs active" data-cat="coffee">Кофе</button>
+      <button class="mtabs" data-cat="tea">Чай</button>
+      <button class="mtabs" data-cat="dessert">Десерты</button>
+      <button class="mtabs" data-cat="breakfast">Завтраки</button>
+    </div>
+    <div class="menu-grid" id="menuGrid">
+      <article class="mitem" data-cat="coffee">
+        <div class="top"><h4>Эспрессо</h4><span class="dash"></span><span class="price">190₽</span></div>
+        <p class="desc">Двойная порция молотого зерна (18 г), крепкий и плотный. Соло или лунго.</p>
+        <div class="meta"><span class="tag hot">хит</span><span class="tag">моно-сорт</span></div>
+      </article>
+      <article class="mitem" data-cat="coffee">
+        <div class="top"><h4>Капучино</h4><span class="dash"></span><span class="price">290₽</span></div>
+        <p class="desc">Классическая молочная пена с бархатной текстурой. В подогретой чашке из чёрной глины.</p>
+        <div class="meta"><span class="tag">250 мл</span></div>
+      </article>
+      <article class="mitem" data-cat="coffee">
+        <div class="top"><h4>Флэт уайт</h4><span class="dash"></span><span class="price">310₽</span></div>
+        <p class="desc">Двойное эспрессо и тонкий слой микропены. Меньше молока — больше вкуса зерна.</p>
+        <div class="meta"><span class="tag hot">выбор барнста</span></div>
+      </article>
+      <article class="mitem" data-cat="coffee">
+        <div class="top"><h4>Колд брю</h4><span class="dash"></span><span class="price">320₽</span></div>
+        <p class="desc">Холодное настаивание 18 часов. Шоколад и чёрная смородина, нулевая кислотность.</p>
+        <div class="meta"><span class="tag new">новинка</span></div>
+      </article>
+      <article class="mitem" data-cat="coffee">
+        <div class="top"><h4>Аэролатте</h4><span class="dash"></span><span class="price">330₽</span></div>
+        <p class="desc">Двойное эспрессо и лёгкая взбитая пена с карамельным оттенком эфиопской Йиргачеффе.</p>
+        <div class="meta"><span class="tag">Earl Grey</span></div>
+      </article>
+      <article class="mitem" data-cat="coffee">
+        <div class="top"><h4>Рэф золотой</h4><span class="dash"></span><span class="price">340₽</span></div>
+        <p class="desc">Базилик, облепиха и эспрессо с тыквенным льдом. Медово-янтарный финиш.</p>
+        <div class="meta"><span class="tag new">сезонное</span></div>
+      </article>
+
+      <article class="mitem" data-cat="tea">
+        <div class="top"><h4>Улун молочный</h4><span class="dash"></span><span class="price">280₽</span></div>
+        <p class="desc">Тайвань, ферментация 60%. Кремовое тело и нотки молока с лесным мёдом.</p>
+        <div class="meta"><span class="tag">390 мл</span></div>
+      </article>
+      <article class="mitem" data-cat="tea">
+        <div class="top"><h4>Мате с юдзу</h4><span class="dash"></span><span class="price">270₽</span></div>
+        <p class="desc">Парагвайский мате, цедра юдзу и тростниковый сахар. Бодрит без горечи.</p>
+        <div class="meta"><span class="tag hot">хит</span></div>
+      </article>
+      <article class="mitem" data-cat="tea">
+        <div class="top"><h4>Ройбуш с дымом</h4><span class="dash"></span><span class="price">240₽</span></div>
+        <p class="desc">Южноафриканский ройбуш с копчёной вишней и корицей. Вечерний бескофеиновый.</p>
+        <div class="meta"><span class="tag">без кофеина</span></div>
+      </article>
+      <article class="mitem" data-cat="tea">
+        <div class="top"><h4>Чай «Север»</h4><span class="dash"></span><span class="price">260₽</span></div>
+        <p class="desc">Чёрный цейлон, шиповник, облепиха и веточка ели. В глиняной кружке.</p>
+        <div class="meta"><span class="tag new">новинка</span></div>
+      </article>
+      <article class="mitem" data-cat="dessert">
+        <div class="top"><h4>Тирамису лату</h4><span class="dash"></span><span class="price">390₽</span></div>
+        <p class="desc">Маскарпоне на взбитых сливках, бисквит в латте и какао-крошка.</p>
+        <div class="meta"><span class="tag hot">хит</span></div>
+      </article>
+      <article class="mitem" data-cat="dessert">
+        <div class="top"><h4>Луковый тарт</h4><span class="dash"></span><span class="price">350₽</span></div>
+        <p class="desc">Сладкий лук, томлёный в масле 40 минут, на тонком песочном тесте.</p>
+        <div class="meta"><span class="tag">несладкое</span></div>
+      </article>
+      <article class="mitem" data-cat="dessert">
+        <div class="top"><h4>Черничный крамбл</h4><span class="dash"></span><span class="price">340₽</span></div>
+        <p class="desc">Тёплый крамбл с черникой, мороженое из ванильного йогурта и мёд.</p>
+        <div class="meta"><span class="tag new">сезон</span></div>
+      </article>
+      <article class="mitem" data-cat="dessert">
+        <div class="top"><h4>Эклер какао</h4><span class="dash"></span><span class="price">220₽</span></div>
+        <p class="desc">Заварной крем с 66% шоколадом, глазурь с солью и какао-бобы.</p>
+        <div class="meta"><span class="tag">с собой</span></div>
+      </article>
+
+      <article class="mitem" data-cat="breakfast">
+        <div class="top"><h4>Брускетта с авокадо</h4><span class="dash"></span><span class="price">380₽</span></div>
+        <p class="desc">Хрустящий хлеб, авокадо, яйцо пашот, стружка рикотты и зелёное масло.</p>
+        <div class="meta"><span class="tag hot">хит</span></div>
+      </article>
+      <article class="mitem" data-cat="breakfast">
+        <div class="top"><h4>Сырники</h4><span class="dash"></span><span class="price">290₽</span></div>
+        <p class="desc">На рикотте, подаём со сметаной, ягодами и цветочным мёдом.</p>
+        <div class="meta"><span class="tag">веган-опция</span></div>
+      </article>
+      <article class="mitem" data-cat="breakfast">
+        <div class="top"><h4>Сэндвич-бенедикт</h4><span class="dash"></span><span class="price">420₽</span></div>
+        <p class="desc">Бриошь, лосось, яйцо-пашот и голландский соус с каперсами.</p>
+        <div class="meta"><span class="tag">до 16:00</span></div>
+      </article>
+      <article class="mitem" data-cat="breakfast">
+        <div class="top"><h4>Овсяная каша</h4><span class="dash"></span><span class="price">250₽</span></div>
+        <p class="desc">На кокосовом молоке, яблоко, корица, грецкий орех и тыквенные семечки.</p>
+        <div class="meta"><span class="tag">без глютена</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+<!-- STORY -->
+<section id="story">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-photo reveal">
+        <div class="sframe"></div>
+        <div class="sface">
+          <cite>«Мы обжариваем только то, что пьём сами»</cite>
+          <span>— Олег Молот, основатель</span>
+        </div>
+      </div>
+      <div class="story-txt reveal">
+        <span class="sec-num">02 · Наша история</span>
+        <h2 style="font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3rem);line-height:1.02;margin-bottom:24px">Философия <em style="color:var(--accent);font-style:italic">зерна</em></h2>
+        <p><span class="drop">В</span> 2014 году мы купили первую рожковую кофеварку и начали обжаривать зерно на балконе. Сегодня малая обжарка каждые <b>48 часов</b> остаётся нашим главным ритуалом.</p>
+        <p>Мы ездим к фермерам в Эфиопию и Колумбию, платим за спелую ягоду и возвращаем часть выручки в кооперативы. <b>Свежесть здесь — закон</b>, а не маркетинг.</p>
+        <div class="story-cols">
+          <div class="cell"><b>10 лет</b><span>напитка</span></div>
+          <div class="cell"><b>7 стран</b><span>происхождения</span></div>
+          <div class="cell"><b>4 сорта</b><span>декафа</span></div>
+          <div class="cell"><b>100%</b><span>прямые закупки</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="sec-num">03 · Бронирование</span>
+      <h2>Закажи <em>столик</em></h2></div>
+      <div class="sec-sub">Уютный зал на 42 места, тихая зона и веранда с видом на парк</div>
+    </div>
+    <div class="books-grid">
+      <div class="book-info reveal">
+        <p>Оставьте заявку — подтвердим бронь по телефону в течение 15 минут в рабочее время. Вечерами пятницы и субботы рекомендуем бронировать заранее.</p>
+        <div class="contact-row"><span class="lbl">Адрес</span><span class="val">ул. Прожжарная, 12с2</span></div>
+        <div class="contact-row"><span class="lbl">Телефон</span><span class="val"><b>+7 (495) 120-14-14</b></span></div>
+        <div class="contact-row"><span class="lbl">Почта</span><span class="val">hello@molot.coffee</span></div>
+        <div class="hours-bar">
+          <div class="hb"><b>Пн — Чт</b><span>08:00 — 22:00</span></div>
+          <div class="hb"><b>Пт — Сб</b><span>09:00 — 00:00</span></div>
+          <div class="hb"><b>Воскресенье</b><span>09:00 — 21:00</span></div>
+          <div class="hb"><b>Доставка</b><span>10:00 — 20:00</span></div>
+        </div>
+      </div>
+      <div class="form-card reveal" id="bookingPanel">
+        <h3>Бронь столика</h3>
+        <div class="formsub">Бесплатно · подтвердим за 15 минут</div>
+        <div class="auth-info" id="authInfo" style="display:none"></div>
+        <form id="bookForm" novalidate>
+          <div class="form-row">
+            <div class="field"><label>Имя <i>*</i></label><input type="text" id="bName" placeholder="Как к вам обращаться" required></div>
+            <div class="field"><label>Телефон <i>*</i></label><input type="tel" id="bPhone" placeholder="+7 (___) ___-__-__" required></div>
+          </div>
+          <div class="form-row3">
+            <div class="field"><label>Дата <i>*</i></label><input type="date" id="bDate" required></div>
+            <div class="field"><label>Время <i>*</i></label><input type="time" id="bTime" value="19:00" required></div>
+            <div class="field"><label>Гостей</label>
+              <select id="bGuests">
+                <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6+</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Зона</label>
+            <select id="bZone">
+              <option>Общий зал</option><option>Тихая зона</option><option>Веранда</option><option>У окна</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-accent btn-block">Забронировать столик</button>
+          <div class="form-note">Нажимая кнопку, вы соглашаетесь с <a href="#">политикой обработки данных</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- MODAL -->
+<div class="modal" id="authModal" role="dialog" aria-modal="true">
+  <div class="mbackdrop" data-close-modal></div>
+  <div class="mcard">
+    <div class="mhead" style="display:flex;justify-content:space-between;align-items:center;padding:24px 28px 0">
+      <h3>МОЛОТ · личный кабинет</h3>
+      <button class="mclose-x" data-close-modal aria-label="Закрыть">×</button>
+    </div>
+    <div class="mtabbar">
+      <button class="mtab active" data-mtab="login">Вход</button>
+      <button class="mtab" data-mtab="register">Регистрация</button>
+    </div>
+    <div class="mbody">
+      <form class="panel-form" id="loginPanel" novalidate>
+        <div class="field"><label>Email</label><input type="email" id="lEmail" placeholder="you@mail.ru"></div>
+        <div class="field"><label>Пароль</label><input type="password" id="lPass" placeholder="••••••••"></div>
+        <button type="submit" class="btn btn-accent btn-block">Войти</button>
+        <div class="switch-line">Нет аккаунта? <button type="button" data-goto="register">Зарегистрироваться</button></div>
+      </form>
+      <form class="panel-form hide" id="registerPanel" novalidate>
+        <div class="form-row">
+          <div class="field"><label>Имя <i>*</i></label><input type="text" id="rName" placeholder="Иван" required></div>
+          <div class="field"><label>E-mail <i>*</i></label><input type="email" id="rEmail" placeholder="you@mail.ru" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Пароль <i>*</i></label><input type="password" id="rPass" placeholder="Минимум 6 символов" required></div>
+          <div class="field"><label>Телефон</label><input type="tel" id="rPhone" placeholder="+7 (___) ___-__-__"></div>
+        </div>
+        <label class="field" style="display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:var(--muted);cursor:pointer">
+          <input type="checkbox" id="rAgree" style="width:auto;margin-top:3px" required> Согласен с <a href="#" style="color:var(--accent)">условиями</a> и обработкой данных
+        </label>
+        <button type="submit" class="btn btn-accent btn-block">Создать аккаунт</button>
+        <div class="switch-line">Уже есть аккаунт? <button type="button" data-switch="login">Войти</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="#top" class="logo" style="margin-bottom:18px"><span class="mark">М</span>МОЛОТ<b>·</b>КОФЕ</a>
+        <p style="margin-top:16px;max-width:32ch">Локальная спешалти-обжарка и кофейня в самом сердце города. Варим, печём и живём со вкусом с 2014 года.</p>
+      </div>
+      <div><h5>Меню</h5>
+        <ul><li><a href="#menu">Кофе</a></li><li><a href="#menu">Чай</a></li><li><a href="#menu">Десерты</a></li><li><a href="#menu">Завтраки</a></li></ul>
+      </div>
+      <div><h5>Гостям</h5>
+        <ul><li><a href="#book">Бронь столика</a></li><li><a href="#" data-open-modal>Войти в кабинет</a></li><li><a href="#story">Наша история</a></li><li><a href="#">Доставка</a></li></ul>
+      </div>
+      <div><h5>Контакты</h5>
+        <p>ул. Прожжарная, 12с2</p>
+        <p style="margin-top:8px">+7 (495) 120-14-14</p>
+        <p style="margin-top:8px">hello@molot.coffee</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 МОЛОТ·КОФЕ. Все права защищены.</span>
+      <span>Сделано с ♥ и лишней чашкой эспрессо</span>
+    </div>
+  </div>
+</footer>
+<script src="js/script.js" defer></script>
+</body>
+</html>
