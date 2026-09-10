@@ -221,13 +221,6 @@ footer{border-top:1px solid var(--line2);padding:70px 0 34px}
 /* инлайн-стили, вынесенные из index.html */
 .nav-cta{padding:11px 20px}
 a.nav-cta.btn-accent{padding:11px 22px}
-/* CTA-кнопки в шапке: перебиваем .nav-links a (у него выше специфичность, чем у .btn-accent) */
-.nav-links a.btn{padding:11px 22px}
-.nav-links a.btn::after{display:none}
-.nav-links a.btn-accent{background:var(--accent);color:#1a0f05}
-.nav-links a.btn-accent:hover{background:#ecad54;color:#1a0f05}
-.nav-links a.btn-ghost{border:1px solid var(--line);color:var(--text)}
-.nav-links a.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .footer-logo{margin-bottom:18px}
 .footer-about{margin-top:16px;max-width:32ch}
 .contact-line{margin-top:8px}
